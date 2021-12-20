@@ -1,8 +1,15 @@
 package telran.util;
 
 public class Length implements Comparable<Length> {
-	float amount;
-	LengthUnit unit;
+	public float amount;
+	public LengthUnit unit;
+	private final static float epsilon = 0.00001f;
+
+	public Length(float amount, LengthUnit unit) {
+		this.amount = amount;
+		this.unit = unit;
+	}
+	
 	@Override
 	/**
 	 * equals two Length objects according to LengthUnit
@@ -10,13 +17,29 @@ public class Length implements Comparable<Length> {
 	 */
 	public boolean equals(Object obj) {
 		//TODO
-		return false;
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		Length other = (Length) obj;
+		if(other.unit != unit) {
+			other = other.convert(unit);
+		}
+		return Math.abs(amount-other.amount)<epsilon;
+		// Done
 	}
 
 	@Override
 	public int compareTo(Length o) {
 		// TODO Auto-generated method stub
-		return 0;
+		Length obj = o;
+		if(unit!=o.unit) {
+			obj = obj.convert(unit);
+		}
+		if(Math.abs(amount-obj.amount)<epsilon) {
+			return 0;
+		}
+		return Float.compare(amount, obj.amount);
+		//	Done
 	}
 	/**
 	 * 
@@ -24,9 +47,11 @@ public class Length implements Comparable<Length> {
 	 * @return new Length object with a given LengthUnit
 	 * convert(LengthUnit.M) returns Length in meters 
 	 */
-	public Length convert(LengthUnit unit) {
+	public Length convert(LengthUnit otherUnit) {
 		//TODO
-		return null;
+		float factor = (this.unit).getValue()/otherUnit.getValue();
+		return new Length(amount*factor, otherUnit);
+		//	Done
 	}
 	@Override
 	/**
@@ -35,7 +60,13 @@ public class Length implements Comparable<Length> {
 	 */
 	public String toString() {
 		//TODO
-		return "";
+		return String.format("%.4f", amount) + unit.toString();
+//		return "";
+		// Done
+	}
+	
+	public static float getPrecision() {
+		return epsilon;
 	}
 	
 	

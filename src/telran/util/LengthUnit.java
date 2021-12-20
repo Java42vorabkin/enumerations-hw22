@@ -18,6 +18,8 @@ MM(1f), CM(10f), IN(25.4f), FT(304.8f), M(1000f), KM(1000000f);
 	 */
 	public Length between(Length l1, Length l2) {
 		//TODO
-		return null;
+		float newAmount = l1.convert(this).amount - l2.convert(this).amount;
+		return new Length(newAmount, this);
+		// Done
 	}
 }
